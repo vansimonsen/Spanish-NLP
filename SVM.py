@@ -1,3 +1,6 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+
 import json
 import unicodedata
 import re
@@ -162,15 +165,6 @@ index = tweets_corpus.polarity.isin(['P', 'P+'])
 tweets_corpus.polarity_bin.loc[index] = 1
 
 
-tweets_test['polarity_bin'] = 0
-
-tweets_tagged['polarity_bin'] = 0
-index = tweets_tagged.polarity.isin(['P', 'P+'])
-tweets_tagged.polarity_bin.loc[index] = 1
-tweets_tagged.polarity_bin.value_counts(normalize=True)
-
-y = tweets_tagged.polarity_bin.values
-
 ### BEST PARAMS
 
 best_params = {'vect__ngram_range': (1, 2), 'cls__loss': 'hinge', 'vect__max_df': 0.5
@@ -203,10 +197,10 @@ rc_test['polarity'] = best_pipe.predict(rc_test.content)
 rl_test['polarity'] = best_pipe.predict(rl_test.content)
 rt_test['polarity'] = best_pipe.predict(rt_test.content)
 
-re_test.to_csv('re_predicted.csv')
-rc_test.to_csv('rc_predicted.csv')
-rl_test.to_csv('rl_predicted.csv')
-rt_test.to_csv('rt_predicted.csv')
+re_test.to_csv('re_predicted.csv', encoding ='utf-8')
+rc_test.to_csv('rc_predicted.csv', encoding ='utf-8')
+rl_test.to_csv('rl_predicted.csv', encoding ='utf-8')
+rt_test.to_csv('rt_predicted.csv', encoding ='utf-8')
 
 
 
