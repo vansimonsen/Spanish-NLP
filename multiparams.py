@@ -23,7 +23,8 @@ from sklearn.grid_search import GridSearchCV
 from sklearn.cross_validation import cross_val_score
 from sklearn.svm import LinearSVC, SVC
 from sklearn.pipeline import Pipeline
-from sklearn.feature_extraction.text import CountVectorizer      
+from sklearn.feature_extraction.text import CountVectorizer 
+from sklearn.multiclass import OnevsOneClassifier     
 
 from SVM import *
 import glob
@@ -165,7 +166,7 @@ vectorizer = CountVectorizer(
 
 pipeline = Pipeline([
     ('vect', vectorizer),
-    ('cls', SVC()),
+    ('cls', OnevsOneClassifier(LinearSVC(random_state=0))),
 ])
 
 
