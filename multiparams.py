@@ -24,7 +24,8 @@ from sklearn.cross_validation import cross_val_score
 from sklearn.svm import LinearSVC, SVC
 from sklearn.pipeline import Pipeline
 from sklearn.feature_extraction.text import CountVectorizer 
-from sklearn.multiclass import OnevsOneClassifier     
+from sklearn.multiclass import OneVsOneClassifier
+from sklearn.preprocessing import label_binarize 
 
 from SVM import *
 import glob
@@ -166,7 +167,7 @@ vectorizer = CountVectorizer(
 
 pipeline = Pipeline([
     ('vect', vectorizer),
-    ('cls', OnevsOneClassifier(LinearSVC(random_state=0))),
+    ('cls', SVC()),
 ])
 
 
@@ -180,8 +181,11 @@ parameters = {
     'cls__max_iter': (500, 1000)
 }
 
+#y = label_binarize(tweets_corpus.multipol, classes = [-1,0,1])
+#print y
 
-grid_search = GridSearchCV(pipeline, parameters, n_jobs=-1 , scoring='roc_auc')
+print pipeline.get_params().keys()
+grid_search = GridSearchCV(pipeline, parameters, n_jobs=-1 )
 grid_search.fit(tweets_corpus.content, tweets_corpus.multipol)
 
-print grid_search.best_params_
+print grid_search._best_params_
