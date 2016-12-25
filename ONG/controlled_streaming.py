@@ -51,6 +51,7 @@ def calculate_t():
 
 def start_and_check(t, filename, accounts):
 	date = (time.strftime("%d/%m/%Y"))[:2]
+	print date
 	file = 'Tweets/'+filename+date+'.json'
 	signal.signal(signal.SIGALRM, timeout_handler)
 
