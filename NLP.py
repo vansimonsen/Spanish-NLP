@@ -61,7 +61,7 @@ def anotherDataXML(origin_path, output_path):
 
     
 
-    for i in data['Content']:
+    for i in data['content']:
 
         tweet = SubElement(tweets, 'tweet')
 
@@ -185,7 +185,14 @@ def nlp(train, test):
     best_pipe.fit(tweets_corpus.content, tweets_corpus.polarity_bin)
 
 
-    test['polarity'] = best_pipe.predict(test.Content)
-    test.to_csv('data_predicted.csv', encoding ='utf-8')
+    test['polarity'] = best_pipe.predict(test.content)
+    test.to_csv('rt_predicted.csv', encoding ='utf-8')
     return test
+
+#tr_re,ts_re = read_data('TASS/csv/general-tweets-train-tagged.csv', 're-test.csv')
+#tr,ts = read_data('TASS/csv/general-tweets-train-tagged.csv', 'rc-test.csv')
+#tr,ts = read_data('TASS/csv/general-tweets-train-tagged.csv', 'rl-test.csv')
+tr,ts = read_data('TASS/csv/general-tweets-train-tagged.csv', 'rt-test.csv')
+
+nlp(tr,ts)
     

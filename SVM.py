@@ -27,12 +27,11 @@ from sklearn.pipeline import Pipeline
 from sklearn.feature_extraction.text import CountVectorizer 
 
 
-nltk.download('punkt')
-nltk.download('stopwords')
+#nltk.download('punkt')
+#nltk.download('stopwords')
 
 
-
-def load_data(training_path,test_path):
+def tr_data(training_path):
 	#Data will be a CSV or XML file
 	try:
 		general_tweets_corpus_train = pd.read_csv(training_path, encoding='utf-8')
@@ -51,8 +50,12 @@ def load_data(training_path,test_path):
 		    row_s.name = i
 		    general_tweets_corpus_train = general_tweets_corpus_train.append(row_s)
 
+	tweets_corpus = pd.concat([general_tweets_corpus_train])
+	tweets_corpus = tweets_corpus.query('agreement != "DISAGREEMENT" and polarity != "NONE"')
+	train_data = tweets_corpus[-tweets_corpus.content.str.contains('^http.*$')]
+	return train_data
 
-
+def ts_data(test_path):
 	try:
 		test_data = pd.read_csv(test_path, encoding='utf-8')
 	except:
@@ -72,14 +75,12 @@ def load_data(training_path,test_path):
 
 	test_data = pd.concat([test_data])
 	
-	tweets_corpus = pd.concat([general_tweets_corpus_train])
-	tweets_corpus = tweets_corpus.query('agreement != "DISAGREEMENT" and polarity != "NONE"')
-	train_data = tweets_corpus[-tweets_corpus.content.str.contains('^http.*$')]
+	
 
-	return train_data, test_data
+	return test_data
 
 
-def tweets_classification(train_data, test_data, json=False, csv=True):
+def tweets_classification(train_data, test_data, json=False, csv=True, result_path=None):
 	#Stem: Cut word in root (wait: wait, waited: wait, waiting: wait)
 	def stem_tokens(tokens, stemmer):
 	    stemmed = []
@@ -150,16 +151,15 @@ def tweets_classification(train_data, test_data, json=False, csv=True):
 	test_data['polarity'] = best_pipe.predict(test_data.content)
 	
 	if csv:
-		test_data.to_csv('result.csv', encoding ='utf-8')
+		test_data.to_csv(result_path, encoding ='utf-8')
 	elif json:
-		test_data.to_json('result.json')
-
-	return result
+		test_data.to_json(result_path)
 
 
-tr, ts = load_data('datasets/csv/general-tweets-train-tagged.csv','reformas/csv/RT.csv')
+	return test_data
+#tr, ts = load_data('TASS/csv/general-tweets-train-tagged.csv','Datasets/reformas/csv/RT.csv')
 
-result = tweets_classification(tr,ts, csv=False, json= True)
+#result = tweets_classification(tr,ts, csv=False, json= True, result_path=0)
 	
 
 
